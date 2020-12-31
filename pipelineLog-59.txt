@@ -1,0 +1,610 @@
++ umask 000
+
++ GIT_LFS_SKIP_SMUDGE=1 git clone --branch="master" --depth 50 https://x-token-auth:$REPOSITORY_OAUTH_ACCESS_TOKEN@bitbucket.org/atlassian/pipelines-examples-rust.git $BUILD_DIR ; git reset --hard 2b2430d96aaf5a6f96bd62187f25ab11d45cf4bd ; git remote set-url origin git@bitbucket.org:atlassian/pipelines-examples-rust.git
+Cloning into '/opt/atlassian/pipelines/agent/build'...
+HEAD is now at 2b2430d bitbucket pipelines, rustfmt
+
++ chmod 777 $BUILD_DIR
+
++ echo "Setup git with read/write access" ; ./scripts/setup-git.sh
+Setup git with read/write access
++ git config --global user.email bedwards@atlassian.com
++ git config --global user.name 'bitbucket pipelines'
++ git remote set-url origin https://bmedwar:$BITBUCKET_APP_PASSWORD@bitbucket.org/atlassian/pipelines-examples-rust.git
+
++ echo "Build project"                    ; cargo build --release
+Build project
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading hyper v0.9.18
+ Downloading bit-set v0.4.0
+ Downloading time v0.1.40
+ Downloading num_cpus v1.8.0
+ Downloading language-tags v0.2.2
+ Downloading rustc-serialize v0.3.24
+ Downloading solicit v0.4.4
+ Downloading httparse v1.2.4
+ Downloading log v0.3.9
+ Downloading unicase v1.4.2
+ Downloading cookie v0.2.5
+ Downloading typeable v0.1.2
+ Downloading mime v0.2.6
+ Downloading url v1.7.0
+ Downloading traitobject v0.0.1
+ Downloading libc v0.2.42
+ Downloading hpack v0.2.0
+ Downloading log v0.4.1
+ Downloading cfg-if v0.1.3
+ Downloading version_check v0.1.3
+ Downloading percent-encoding v1.0.1
+ Downloading matches v0.1.6
+ Downloading idna v0.1.4
+ Downloading unicode-bidi v0.3.4
+ Downloading unicode-normalization v0.1.7
+ Downloading bit-vec v0.4.4
+   Compiling matches v0.1.6
+   Compiling cfg-if v0.1.3
+   Compiling unicode-normalization v0.1.7
+   Compiling version_check v0.1.3
+   Compiling percent-encoding v1.0.1
+   Compiling libc v0.2.42
+   Compiling httparse v1.2.4
+   Compiling bit-vec v0.4.4
+   Compiling rustc-serialize v0.3.24
+   Compiling traitobject v0.0.1
+   Compiling language-tags v0.2.2
+   Compiling typeable v0.1.2
+   Compiling log v0.4.1
+   Compiling unicode-bidi v0.3.4
+   Compiling bit-set v0.4.0
+   Compiling time v0.1.40
+   Compiling num_cpus v1.8.0
+   Compiling unicase v1.4.2
+   Compiling log v0.3.9
+   Compiling hpack v0.2.0
+   Compiling mime v0.2.6
+   Compiling solicit v0.4.4
+   Compiling idna v0.1.4
+   Compiling url v1.7.0
+   Compiling cookie v0.2.5
+   Compiling hyper v0.9.18
+   Compiling alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+    Finished release [optimized] target(s) in 1m 28s
+
++ echo "Format source code"               ; ./scripts/fmt.sh
+Format source code
++ rustup component add rustfmt-preview
+info: downloading component 'rustfmt-preview'
+info: installing component 'rustfmt-preview'
++ cargo fmt -v -- -v --emit files
+[example] "/opt/atlassian/pipelines/agent/build/examples/alienlanguage.rs"
+[bin] "/opt/atlassian/pipelines/agent/build/src/main.rs"
+[test] "/opt/atlassian/pipelines/agent/build/tests/alienlanguage.rs"
+[lib] "/opt/atlassian/pipelines/agent/build/src/lib.rs"
+rustfmt -v --emit files /opt/atlassian/pipelines/agent/build/examples/alienlanguage.rs /opt/atlassian/pipelines/agent/build/src/main.rs /opt/atlassian/pipelines/agent/build/tests/alienlanguage.rs /opt/atlassian/pipelines/agent/build/src/lib.rs
+Formatting /opt/atlassian/pipelines/agent/build/examples/alienlanguage.rs
+Spent 0.000 secs in the parsing phase, and 0.001 secs in the formatting phase
+Formatting /opt/atlassian/pipelines/agent/build/src/main.rs
+Spent 0.000 secs in the parsing phase, and 0.001 secs in the formatting phase
+Formatting /opt/atlassian/pipelines/agent/build/tests/alienlanguage.rs
+Spent 0.000 secs in the parsing phase, and 0.000 secs in the formatting phase
+Formatting /opt/atlassian/pipelines/agent/build/src/lib.rs
+Spent 0.001 secs in the parsing phase, and 0.002 secs in the formatting phase
++ git commit -a -m 'bitbucket pipelines, rustfmt'
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working tree clean
+
++ echo "Run unit tests"                   ; cargo test --lib --release -v --no-fail-fast -- --nocapture --test
+Run unit tests
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+       Fresh cfg-if v0.1.3
+       Fresh matches v0.1.6
+       Fresh unicode-normalization v0.1.7
+       Fresh version_check v0.1.3
+       Fresh percent-encoding v1.0.1
+       Fresh libc v0.2.42
+       Fresh httparse v1.2.4
+       Fresh rustc-serialize v0.3.24
+       Fresh traitobject v0.0.1
+       Fresh typeable v0.1.2
+       Fresh language-tags v0.2.2
+       Fresh bit-vec v0.4.4
+       Fresh log v0.4.1
+       Fresh unicode-bidi v0.3.4
+       Fresh time v0.1.40
+       Fresh num_cpus v1.8.0
+       Fresh bit-set v0.4.0
+       Fresh log v0.3.9
+       Fresh idna v0.1.4
+       Fresh hpack v0.2.0
+       Fresh mime v0.2.6
+       Fresh url v1.7.0
+       Fresh unicase v1.4.2
+       Fresh solicit v0.4.4
+       Fresh cookie v0.2.5
+       Fresh hyper v0.9.18
+   Compiling alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+     Running `rustc --crate-name alienlanguage src/lib.rs --emit=dep-info,link -C opt-level=3 --test -C metadata=618ee719152eafd3 -C extra-filename=-618ee719152eafd3 --out-dir /opt/atlassian/pipelines/agent/build/target/release/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/release/deps --extern bit_set=/opt/atlassian/pipelines/agent/build/target/release/deps/libbit_set-d58755d6888e4cce.rlib --extern hyper=/opt/atlassian/pipelines/agent/build/target/release/deps/libhyper-cb67154d1949f05d.rlib`
+    Finished release [optimized] target(s) in 1.06s
+     Running `/opt/atlassian/pipelines/agent/build/target/release/deps/alienlanguage-618ee719152eafd3 --nocapture --test`
+
+running 2 tests
+test tests::it_works ... ok
+test tests::bench ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+
++ echo "Run documentation tests"          ; cargo test --doc --release -v --no-fail-fast -- --nocapture --test
+Run documentation tests
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+       Fresh cfg-if v0.1.3
+       Fresh matches v0.1.6
+       Fresh version_check v0.1.3
+       Fresh unicode-normalization v0.1.7
+       Fresh libc v0.2.42
+       Fresh percent-encoding v1.0.1
+       Fresh rustc-serialize v0.3.24
+       Fresh traitobject v0.0.1
+       Fresh language-tags v0.2.2
+       Fresh httparse v1.2.4
+       Fresh typeable v0.1.2
+       Fresh bit-vec v0.4.4
+       Fresh log v0.4.1
+       Fresh unicode-bidi v0.3.4
+       Fresh time v0.1.40
+       Fresh num_cpus v1.8.0
+       Fresh bit-set v0.4.0
+       Fresh log v0.3.9
+       Fresh idna v0.1.4
+       Fresh hpack v0.2.0
+       Fresh mime v0.2.6
+       Fresh url v1.7.0
+       Fresh unicase v1.4.2
+       Fresh solicit v0.4.4
+       Fresh cookie v0.2.5
+       Fresh hyper v0.9.18
+       Fresh alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+    Finished release [optimized] target(s) in 0.04s
+   Doc-tests alienlanguage
+     Running `rustdoc --test /opt/atlassian/pipelines/agent/build/src/lib.rs --crate-name alienlanguage -L dependency=/opt/atlassian/pipelines/agent/build/target/release/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/release/deps --test-args --nocapture --test-args --test --extern alienlanguage=/opt/atlassian/pipelines/agent/build/target/release/deps/libalienlanguage-e58b17d591538eb6.rlib --extern hyper=/opt/atlassian/pipelines/agent/build/target/release/deps/libhyper-cb67154d1949f05d.rlib --extern bit_set=/opt/atlassian/pipelines/agent/build/target/release/deps/libbit_set-d58755d6888e4cce.rlib`
+
+running 2 tests
+test src/lib.rs - Problem<'a>::from_lines (line 52) ... ok
+test src/lib.rs - Problem (line 21) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+
++ echo "Run integration tests"            ; cargo test --test ${CARGO_LIB_NAME} --release -v --no-fail-fast -- --nocapture --test
+Run integration tests
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+       Fresh matches v0.1.6
+       Fresh cfg-if v0.1.3
+       Fresh version_check v0.1.3
+       Fresh unicode-normalization v0.1.7
+       Fresh libc v0.2.42
+       Fresh percent-encoding v1.0.1
+       Fresh rustc-serialize v0.3.24
+       Fresh bit-vec v0.4.4
+       Fresh typeable v0.1.2
+       Fresh traitobject v0.0.1
+       Fresh language-tags v0.2.2
+       Fresh httparse v1.2.4
+       Fresh unicode-bidi v0.3.4
+       Fresh log v0.4.1
+       Fresh time v0.1.40
+       Fresh num_cpus v1.8.0
+       Fresh bit-set v0.4.0
+       Fresh idna v0.1.4
+       Fresh log v0.3.9
+       Fresh url v1.7.0
+       Fresh hpack v0.2.0
+       Fresh mime v0.2.6
+       Fresh unicase v1.4.2
+       Fresh cookie v0.2.5
+       Fresh solicit v0.4.4
+       Fresh hyper v0.9.18
+   Compiling alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+     Running `rustc --crate-name alienlanguage tests/alienlanguage.rs --emit=dep-info,link -C opt-level=3 --test -C metadata=3437d2eed473c9de -C extra-filename=-3437d2eed473c9de --out-dir /opt/atlassian/pipelines/agent/build/target/release/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/release/deps --extern alienlanguage=/opt/atlassian/pipelines/agent/build/target/release/deps/libalienlanguage-e58b17d591538eb6.rlib --extern bit_set=/opt/atlassian/pipelines/agent/build/target/release/deps/libbit_set-d58755d6888e4cce.rlib --extern hyper=/opt/atlassian/pipelines/agent/build/target/release/deps/libhyper-cb67154d1949f05d.rlib`
+    Finished release [optimized] target(s) in 0.66s
+     Running `/opt/atlassian/pipelines/agent/build/target/release/deps/alienlanguage-3437d2eed473c9de --nocapture --test`
+
+running 3 tests
+test sample ... ok
+test small ... ok
+test large ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+
++ echo "Run benchmark tests"              ; cargo test --lib --release -v --no-fail-fast -- --nocapture --bench
+Run benchmark tests
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+       Fresh cfg-if v0.1.3
+       Fresh matches v0.1.6
+       Fresh version_check v0.1.3
+       Fresh unicode-normalization v0.1.7
+       Fresh percent-encoding v1.0.1
+       Fresh libc v0.2.42
+       Fresh language-tags v0.2.2
+       Fresh typeable v0.1.2
+       Fresh traitobject v0.0.1
+       Fresh rustc-serialize v0.3.24
+       Fresh bit-vec v0.4.4
+       Fresh httparse v1.2.4
+       Fresh log v0.4.1
+       Fresh unicode-bidi v0.3.4
+       Fresh time v0.1.40
+       Fresh num_cpus v1.8.0
+       Fresh bit-set v0.4.0
+       Fresh log v0.3.9
+       Fresh idna v0.1.4
+       Fresh hpack v0.2.0
+       Fresh mime v0.2.6
+       Fresh url v1.7.0
+       Fresh unicase v1.4.2
+       Fresh solicit v0.4.4
+       Fresh cookie v0.2.5
+       Fresh hyper v0.9.18
+       Fresh alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+    Finished release [optimized] target(s) in 0.04s
+     Running `/opt/atlassian/pipelines/agent/build/target/release/deps/alienlanguage-618ee719152eafd3 --nocapture --bench`
+
+running 2 tests
+test tests::it_works ... ignored
+test tests::bench ... bench:   1,466,789 ns/iter (+/- 82,024)
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 1 measured; 0 filtered out
+
+
++ echo "Publish documentation"            ; ./scripts/docs.sh
+Publish documentation
++ cargo doc --release --no-deps
+warning: An explicit [[bin]] section is specified in Cargo.toml which currently
+disables Cargo from automatically inferring other binary targets.
+This inference behavior will change in the Rust 2018 edition and the following
+files will be included as a binary target:
+
+* /opt/atlassian/pipelines/agent/build/src/main.rs
+
+This is likely to break cargo build or cargo test as these files may not be
+ready to be compiled as a binary target today. You can future-proof yourself
+and disable this warning by adding `autobins = false` to your [package]
+section. You may also move the files to a location where Cargo would not
+automatically infer them to be a target, such as in subfolders.
+
+For more information on this warning you can consult
+https://github.com/rust-lang/cargo/issues/5330
+warning: path `/opt/atlassian/pipelines/agent/build/src/main.rs` was erroneously implicitly accepted for binary `webservice`,
+please set bin.path in Cargo.toml
+    Checking matches v0.1.6
+    Checking cfg-if v0.1.3
+    Checking unicode-normalization v0.1.7
+    Checking percent-encoding v1.0.1
+    Checking libc v0.2.42
+    Checking typeable v0.1.2
+    Checking traitobject v0.0.1
+    Checking httparse v1.2.4
+    Checking bit-vec v0.4.4
+    Checking language-tags v0.2.2
+    Checking rustc-serialize v0.3.24
+    Checking log v0.4.1
+    Checking unicode-bidi v0.3.4
+    Checking unicase v1.4.2
+    Checking log v0.3.9
+    Checking bit-set v0.4.0
+    Checking hpack v0.2.0
+    Checking mime v0.2.6
+    Checking solicit v0.4.4
+    Checking time v0.1.40
+    Checking num_cpus v1.8.0
+    Checking idna v0.1.4
+    Checking url v1.7.0
+    Checking cookie v0.2.5
+    Checking hyper v0.9.18
+    Checking alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+ Documenting alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+warning: [cfg] cannot be resolved, ignoring it...
+
+    Finished release [optimized] target(s) in 30.11s
++ git clone https://bmedwar:$BITBUCKET_APP_PASSWORD@bitbucket.org/alienlanguage/alienlanguage.bitbucket.org.git target/docwebsite
+Cloning into 'target/docwebsite'...
++ rm -rvf target/docwebsite/COPYRIGHT.txt target/docwebsite/FiraSans-LICENSE.txt target/docwebsite/FiraSans-Medium.woff target/docwebsite/FiraSans-Regular.woff target/docwebsite/Heuristica-Italic.woff target/docwebsite/Heuristica-LICENSE.txt target/docwebsite/LICENSE-APACHE.txt target/docwebsite/LICENSE-MIT.txt target/docwebsite/SourceCodePro-LICENSE.txt target/docwebsite/SourceCodePro-Regular.woff target/docwebsite/SourceCodePro-Semibold.woff target/docwebsite/SourceSerifPro-Bold.woff target/docwebsite/SourceSerifPro-LICENSE.txt target/docwebsite/SourceSerifPro-Regular.woff target/docwebsite/alienlanguage target/docwebsite/implementors target/docwebsite/index.html target/docwebsite/main.css target/docwebsite/main.js target/docwebsite/normalize.css target/docwebsite/rustdoc.css target/docwebsite/search-index.js target/docwebsite/src target/docwebsite/webservice
+removed 'target/docwebsite/COPYRIGHT.txt'
+removed 'target/docwebsite/FiraSans-LICENSE.txt'
+removed 'target/docwebsite/FiraSans-Medium.woff'
+removed 'target/docwebsite/FiraSans-Regular.woff'
+removed 'target/docwebsite/Heuristica-Italic.woff'
+removed 'target/docwebsite/Heuristica-LICENSE.txt'
+removed 'target/docwebsite/LICENSE-APACHE.txt'
+removed 'target/docwebsite/LICENSE-MIT.txt'
+removed 'target/docwebsite/SourceCodePro-LICENSE.txt'
+removed 'target/docwebsite/SourceCodePro-Regular.woff'
+removed 'target/docwebsite/SourceCodePro-Semibold.woff'
+removed 'target/docwebsite/SourceSerifPro-Bold.woff'
+removed 'target/docwebsite/SourceSerifPro-LICENSE.txt'
+removed 'target/docwebsite/SourceSerifPro-Regular.woff'
+removed 'target/docwebsite/alienlanguage/sidebar-items.js'
+removed 'target/docwebsite/alienlanguage/Problem.t.html'
+removed 'target/docwebsite/alienlanguage/struct.Problem.html'
+removed 'target/docwebsite/alienlanguage/index.html'
+removed directory 'target/docwebsite/alienlanguage'
+removed 'target/docwebsite/implementors/core/iter/iterator/trait.Iterator.js'
+removed directory 'target/docwebsite/implementors/core/iter/iterator'
+removed directory 'target/docwebsite/implementors/core/iter'
+removed directory 'target/docwebsite/implementors/core'
+removed directory 'target/docwebsite/implementors'
+removed 'target/docwebsite/index.html'
+removed 'target/docwebsite/main.css'
+removed 'target/docwebsite/main.js'
+removed 'target/docwebsite/normalize.css'
+removed 'target/docwebsite/rustdoc.css'
+removed 'target/docwebsite/search-index.js'
+removed 'target/docwebsite/src/alienlanguage/lib.rs.html'
+removed directory 'target/docwebsite/src/alienlanguage'
+removed 'target/docwebsite/src/webservice/main.rs.html'
+removed directory 'target/docwebsite/src/webservice'
+removed directory 'target/docwebsite/src'
+removed 'target/docwebsite/webservice/sidebar-items.js'
+removed 'target/docwebsite/webservice/index.html'
+removed directory 'target/docwebsite/webservice'
++ cp -rv target/doc/COPYRIGHT.txt target/doc/FiraSans-LICENSE.txt target/doc/FiraSans-Medium.woff target/doc/FiraSans-Regular.woff target/doc/Heuristica-Italic.woff target/doc/Heuristica-LICENSE.txt target/doc/LICENSE-APACHE.txt target/doc/LICENSE-MIT.txt target/doc/SourceCodePro-LICENSE.txt target/doc/SourceCodePro-Regular.woff target/doc/SourceCodePro-Semibold.woff target/doc/SourceSerifPro-Bold.woff target/doc/SourceSerifPro-LICENSE.txt target/doc/SourceSerifPro-Regular.woff target/doc/aliases.js target/doc/alienlanguage target/doc/brush.svg target/doc/dark.css target/doc/implementors target/doc/light.css target/doc/main.js target/doc/normalize.css target/doc/rustdoc.css target/doc/search-index.js target/doc/settings.css target/doc/settings.html target/doc/settings.js target/doc/src target/doc/storage.js target/doc/theme.js target/doc/webservice target/doc/wheel.svg target/docwebsite/
+'target/doc/COPYRIGHT.txt' -> 'target/docwebsite/COPYRIGHT.txt'
+'target/doc/FiraSans-LICENSE.txt' -> 'target/docwebsite/FiraSans-LICENSE.txt'
+'target/doc/FiraSans-Medium.woff' -> 'target/docwebsite/FiraSans-Medium.woff'
+'target/doc/FiraSans-Regular.woff' -> 'target/docwebsite/FiraSans-Regular.woff'
+'target/doc/Heuristica-Italic.woff' -> 'target/docwebsite/Heuristica-Italic.woff'
+'target/doc/Heuristica-LICENSE.txt' -> 'target/docwebsite/Heuristica-LICENSE.txt'
+'target/doc/LICENSE-APACHE.txt' -> 'target/docwebsite/LICENSE-APACHE.txt'
+'target/doc/LICENSE-MIT.txt' -> 'target/docwebsite/LICENSE-MIT.txt'
+'target/doc/SourceCodePro-LICENSE.txt' -> 'target/docwebsite/SourceCodePro-LICENSE.txt'
+'target/doc/SourceCodePro-Regular.woff' -> 'target/docwebsite/SourceCodePro-Regular.woff'
+'target/doc/SourceCodePro-Semibold.woff' -> 'target/docwebsite/SourceCodePro-Semibold.woff'
+'target/doc/SourceSerifPro-Bold.woff' -> 'target/docwebsite/SourceSerifPro-Bold.woff'
+'target/doc/SourceSerifPro-LICENSE.txt' -> 'target/docwebsite/SourceSerifPro-LICENSE.txt'
+'target/doc/SourceSerifPro-Regular.woff' -> 'target/docwebsite/SourceSerifPro-Regular.woff'
+'target/doc/aliases.js' -> 'target/docwebsite/aliases.js'
+'target/doc/alienlanguage' -> 'target/docwebsite/alienlanguage'
+'target/doc/alienlanguage/index.html' -> 'target/docwebsite/alienlanguage/index.html'
+'target/doc/alienlanguage/sidebar-items.js' -> 'target/docwebsite/alienlanguage/sidebar-items.js'
+'target/doc/alienlanguage/struct.Problem.html' -> 'target/docwebsite/alienlanguage/struct.Problem.html'
+'target/doc/alienlanguage/Problem.t.html' -> 'target/docwebsite/alienlanguage/Problem.t.html'
+'target/doc/alienlanguage/all.html' -> 'target/docwebsite/alienlanguage/all.html'
+'target/doc/brush.svg' -> 'target/docwebsite/brush.svg'
+'target/doc/dark.css' -> 'target/docwebsite/dark.css'
+'target/doc/implementors' -> 'target/docwebsite/implementors'
+'target/doc/implementors/core' -> 'target/docwebsite/implementors/core'
+'target/doc/implementors/core/marker' -> 'target/docwebsite/implementors/core/marker'
+'target/doc/implementors/core/marker/trait.Send.js' -> 'target/docwebsite/implementors/core/marker/trait.Send.js'
+'target/doc/implementors/core/marker/trait.Sync.js' -> 'target/docwebsite/implementors/core/marker/trait.Sync.js'
+'target/doc/implementors/core/iter' -> 'target/docwebsite/implementors/core/iter'
+'target/doc/implementors/core/iter/iterator' -> 'target/docwebsite/implementors/core/iter/iterator'
+'target/doc/implementors/core/iter/iterator/trait.Iterator.js' -> 'target/docwebsite/implementors/core/iter/iterator/trait.Iterator.js'
+'target/doc/light.css' -> 'target/docwebsite/light.css'
+'target/doc/main.js' -> 'target/docwebsite/main.js'
+'target/doc/normalize.css' -> 'target/docwebsite/normalize.css'
+'target/doc/rustdoc.css' -> 'target/docwebsite/rustdoc.css'
+'target/doc/search-index.js' -> 'target/docwebsite/search-index.js'
+'target/doc/settings.css' -> 'target/docwebsite/settings.css'
+'target/doc/settings.html' -> 'target/docwebsite/settings.html'
+'target/doc/settings.js' -> 'target/docwebsite/settings.js'
+'target/doc/src' -> 'target/docwebsite/src'
+'target/doc/src/alienlanguage' -> 'target/docwebsite/src/alienlanguage'
+'target/doc/src/alienlanguage/lib.rs.html' -> 'target/docwebsite/src/alienlanguage/lib.rs.html'
+'target/doc/src/webservice' -> 'target/docwebsite/src/webservice'
+'target/doc/src/webservice/main.rs.html' -> 'target/docwebsite/src/webservice/main.rs.html'
+'target/doc/storage.js' -> 'target/docwebsite/storage.js'
+'target/doc/theme.js' -> 'target/docwebsite/theme.js'
+'target/doc/webservice' -> 'target/docwebsite/webservice'
+'target/doc/webservice/index.html' -> 'target/docwebsite/webservice/index.html'
+'target/doc/webservice/sidebar-items.js' -> 'target/docwebsite/webservice/sidebar-items.js'
+'target/doc/webservice/all.html' -> 'target/docwebsite/webservice/all.html'
+'target/doc/wheel.svg' -> 'target/docwebsite/wheel.svg'
++ cp -v docwebsite/index.html target/docwebsite/
+'docwebsite/index.html' -> 'target/docwebsite/index.html'
++ cd target/docwebsite
++ git add -A
++ git commit -m 'bitbucket pipelines, atlassian/pipelines-examples-rust commit 2b2430d96aaf5a6f96bd62187f25ab11d45cf4bd'
+[master 11b8c17] bitbucket pipelines, atlassian/pipelines-examples-rust commit 2b2430d96aaf5a6f96bd62187f25ab11d45cf4bd
+ 23 files changed, 1531 insertions(+), 2111 deletions(-)
+ create mode 100644 aliases.js
+ create mode 100644 alienlanguage/all.html
+ rewrite alienlanguage/index.html (87%)
+ rewrite alienlanguage/struct.Problem.html (83%)
+ create mode 100644 brush.svg
+ create mode 100644 dark.css
+ create mode 100644 implementors/core/marker/trait.Send.js
+ create mode 100644 implementors/core/marker/trait.Sync.js
+ rename main.css => light.css (60%)
+ rewrite main.js (98%)
+ create mode 100644 settings.css
+ create mode 100644 settings.html
+ create mode 100644 settings.js
+ create mode 100644 storage.js
+ create mode 100644 theme.js
+ create mode 100644 webservice/all.html
+ rewrite webservice/index.html (92%)
+ create mode 100644 wheel.svg
++ git push
+To https://bitbucket.org/alienlanguage/alienlanguage.bitbucket.org.git
+   7f3f656..11b8c17  master -> master
+
++ echo "Upload to crates.io"              ; ./scripts/crates-io.sh
+Upload to crates.io
++ cargo login $CARGO_API_KEY
++ cargo publish -v
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+   Packaging alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+   Archiving .gitignore
+   Archiving Cargo.toml
+   Archiving README.md
+   Archiving bitbucket-pipelines.yml
+   Archiving docs/alien-language.md
+   Archiving docs/run-example-web-service.md
+   Archiving docs/setting-up-a-rust-project.md
+   Archiving docwebsite/index.html
+   Archiving examples/alienlanguage.rs
+   Archiving examples/output/README.md
+   Archiving input/large.txt
+   Archiving input/sample.txt
+   Archiving input/small.txt
+   Archiving scripts/aws.sh
+   Archiving scripts/crates-io.sh
+   Archiving scripts/docs.sh
+   Archiving scripts/fmt.sh
+   Archiving scripts/setup-git.sh
+   Archiving src/lib.rs
+   Archiving src/main.rs
+   Archiving tests/alienlanguage.rs
+   Archiving tests/expected/large.txt
+   Archiving tests/expected/sample.txt
+   Archiving tests/expected/small.txt
+   Verifying alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+   Compiling cfg-if v0.1.3
+   Compiling matches v0.1.6
+   Compiling unicode-normalization v0.1.7
+   Compiling version_check v0.1.3
+   Compiling percent-encoding v1.0.1
+   Compiling libc v0.2.42
+   Compiling rustc-serialize v0.3.24
+   Compiling httparse v1.2.4
+     Running `rustc --crate-name cfg_if /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/cfg-if-0.1.3/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=e563a69591a204d0 -C extra-filename=-e563a69591a204d0 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name matches /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/matches-0.1.6/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=97dfc9fd70704d8b -C extra-filename=-97dfc9fd70704d8b --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name unicode_normalization /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/unicode-normalization-0.1.7/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=4b51a21f16fab890 -C extra-filename=-4b51a21f16fab890 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name version_check /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.1.3/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=016ff9e1f04ff2bb -C extra-filename=-016ff9e1f04ff2bb --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name httparse /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/httparse-1.2.4/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 --cfg 'feature="default"' --cfg 'feature="std"' -C metadata=b6935958cb27fccd -C extra-filename=-b6935958cb27fccd --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name libc /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.42/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 --cfg 'feature="default"' --cfg 'feature="use_std"' -C metadata=2e3b3977fb8fa36a -C extra-filename=-2e3b3977fb8fa36a --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name rustc_serialize /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/rustc-serialize-0.3.24/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=f64e6798ce81dcbe -C extra-filename=-f64e6798ce81dcbe --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name percent_encoding /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/percent-encoding-1.0.1/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=defa402a5d7322c1 -C extra-filename=-defa402a5d7322c1 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+   Compiling language-tags v0.2.2
+     Running `rustc --crate-name language_tags /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/language-tags-0.2.2/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=82de05a5f03ee379 -C extra-filename=-82de05a5f03ee379 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+   Compiling traitobject v0.0.1
+     Running `rustc --crate-name traitobject /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/traitobject-0.0.1/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=6f9e3410039c13d6 -C extra-filename=-6f9e3410039c13d6 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+   Compiling typeable v0.1.2
+     Running `rustc --crate-name typeable /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/typeable-0.1.2/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=76094bfc377289d3 -C extra-filename=-76094bfc377289d3 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+   Compiling bit-vec v0.4.4
+     Running `rustc --crate-name bit_vec /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/bit-vec-0.4.4/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=cbfcced397bd5877 -C extra-filename=-cbfcced397bd5877 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow`
+   Compiling log v0.4.1
+     Running `rustc --crate-name log /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/log-0.4.1/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 --cfg 'feature="std"' -C metadata=b99c3a47c38e6990 -C extra-filename=-b99c3a47c38e6990 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern cfg_if=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libcfg_if-e563a69591a204d0.rlib --cap-lints allow`
+   Compiling unicode-bidi v0.3.4
+     Running `rustc --crate-name unicode_bidi /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/unicode-bidi-0.3.4/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 --cfg 'feature="default"' -C metadata=840b77dcd752d903 -C extra-filename=-840b77dcd752d903 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern matches=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libmatches-97dfc9fd70704d8b.rlib --cap-lints allow`
+   Compiling unicase v1.4.2
+     Running `rustc --crate-name build_script_build /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/unicase-1.4.2/build.rs --crate-type bin --emit=dep-info,link -C debuginfo=2 -C metadata=978011861e29408e -C extra-filename=-978011861e29408e --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/build/unicase-978011861e29408e -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern version_check=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libversion_check-016ff9e1f04ff2bb.rlib --cap-lints allow`
+   Compiling time v0.1.40
+     Running `rustc --crate-name time /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.40/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=97b02ceb6dd0f76c -C extra-filename=-97b02ceb6dd0f76c --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern libc=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblibc-2e3b3977fb8fa36a.rlib --cap-lints allow`
+   Compiling num_cpus v1.8.0
+     Running `rustc --crate-name num_cpus /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/num_cpus-1.8.0/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=8f634f6aa3f78956 -C extra-filename=-8f634f6aa3f78956 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern libc=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblibc-2e3b3977fb8fa36a.rlib --cap-lints allow`
+   Compiling log v0.3.9
+     Running `rustc --crate-name log /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/log-0.3.9/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 --cfg 'feature="default"' --cfg 'feature="log"' --cfg 'feature="use_std"' -C metadata=26d62f9e6720d968 -C extra-filename=-26d62f9e6720d968 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern log=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblog-b99c3a47c38e6990.rlib --cap-lints allow`
+   Compiling bit-set v0.4.0
+     Running `rustc --crate-name bit_set /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/bit-set-0.4.0/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=92fcd461ade8a7fa -C extra-filename=-92fcd461ade8a7fa --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern bit_vec=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libbit_vec-cbfcced397bd5877.rlib --cap-lints allow`
+     Running `/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/build/unicase-978011861e29408e/build-script-build`
+   Compiling hpack v0.2.0
+     Running `rustc --crate-name hpack /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/hpack-0.2.0/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=e2b4ff4784254357 -C extra-filename=-e2b4ff4784254357 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern log=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblog-26d62f9e6720d968.rlib --cap-lints allow`
+   Compiling mime v0.2.6
+     Running `rustc --crate-name mime /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/mime-0.2.6/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=a9be64cdd2f78f97 -C extra-filename=-a9be64cdd2f78f97 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern log=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblog-26d62f9e6720d968.rlib --cap-lints allow`
+     Running `rustc --crate-name unicase /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/unicase-1.4.2/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=eec333d2a520f6bb -C extra-filename=-eec333d2a520f6bb --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --cap-lints allow --cfg __unicase__iter_cmp --cfg __unicase__default_hasher`
+   Compiling solicit v0.4.4
+     Running `rustc --crate-name solicit /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/solicit-0.4.4/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=95680e186bc5b0aa -C extra-filename=-95680e186bc5b0aa --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern hpack=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libhpack-e2b4ff4784254357.rlib --extern log=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblog-26d62f9e6720d968.rlib --cap-lints allow`
+   Compiling idna v0.1.4
+     Running `rustc --crate-name idna /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/idna-0.1.4/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=d7443a4b3e1fe645 -C extra-filename=-d7443a4b3e1fe645 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern matches=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libmatches-97dfc9fd70704d8b.rlib --extern unicode_bidi=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libunicode_bidi-840b77dcd752d903.rlib --extern unicode_normalization=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libunicode_normalization-4b51a21f16fab890.rlib --cap-lints allow`
+   Compiling url v1.7.0
+     Running `rustc --crate-name url /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/url-1.7.0/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=589ea7d48edcb175 -C extra-filename=-589ea7d48edcb175 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern idna=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libidna-d7443a4b3e1fe645.rlib --extern matches=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libmatches-97dfc9fd70704d8b.rlib --extern percent_encoding=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libpercent_encoding-defa402a5d7322c1.rlib --cap-lints allow`
+   Compiling cookie v0.2.5
+     Running `rustc --crate-name cookie /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/cookie-0.2.5/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=7f4c322305bc1830 -C extra-filename=-7f4c322305bc1830 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern time=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libtime-97b02ceb6dd0f76c.rlib --extern url=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liburl-589ea7d48edcb175.rlib --cap-lints allow`
+   Compiling hyper v0.9.18
+     Running `rustc --crate-name hyper /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.9.18/src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=f2eda0762131f747 -C extra-filename=-f2eda0762131f747 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern cookie=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libcookie-7f4c322305bc1830.rlib --extern httparse=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libhttparse-b6935958cb27fccd.rlib --extern language_tags=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblanguage_tags-82de05a5f03ee379.rlib --extern log=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liblog-26d62f9e6720d968.rlib --extern mime=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libmime-a9be64cdd2f78f97.rlib --extern num_cpus=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libnum_cpus-8f634f6aa3f78956.rlib --extern rustc_serialize=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/librustc_serialize-f64e6798ce81dcbe.rlib --extern solicit=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libsolicit-95680e186bc5b0aa.rlib --extern time=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libtime-97b02ceb6dd0f76c.rlib --extern traitobject=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libtraitobject-6f9e3410039c13d6.rlib --extern typeable=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libtypeable-76094bfc377289d3.rlib --extern unicase=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libunicase-eec333d2a520f6bb.rlib --extern url=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/liburl-589ea7d48edcb175.rlib --cap-lints allow`
+   Compiling alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0)
+     Running `rustc --crate-name alienlanguage src/lib.rs --crate-type lib --emit=dep-info,link -C debuginfo=2 -C metadata=f2072431b11fa2c9 -C extra-filename=-f2072431b11fa2c9 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -C incremental=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/incremental -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern bit_set=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libbit_set-92fcd461ade8a7fa.rlib --extern hyper=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libhyper-f2eda0762131f747.rlib`
+     Running `rustc --crate-name webservice src/main.rs --crate-type bin --emit=dep-info,link -C debuginfo=2 -C metadata=3a183a69f08b2410 -C extra-filename=-3a183a69f08b2410 --out-dir /opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps -C incremental=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/incremental -L dependency=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps --extern alienlanguage=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libalienlanguage-f2072431b11fa2c9.rlib --extern bit_set=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libbit_set-92fcd461ade8a7fa.rlib --extern hyper=/opt/atlassian/pipelines/agent/build/target/package/alienlanguage-0.1.0/target/debug/deps/libhyper-f2eda0762131f747.rlib`
+    Finished dev [unoptimized + debuginfo] target(s) in 44.58s
+   Uploading alienlanguage v0.1.0 (file:///opt/atlassian/pipelines/agent/build)
+error: api errors: crate version `0.1.0` is already uploaded
++ true
+
+Searching for test report files in directories named [test-results, failsafe-reports, test-reports, surefire-reports] down to a depth of 4
+Finished scanning for test reports. Found 0 test report files.
+Merged test suites, total number tests is 0, with 0 failures and 0 errors.
